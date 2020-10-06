@@ -5,7 +5,7 @@
 build
 
 # Bot config
-/config
+/config.json
 
 # Mac os
 .DS_Store

@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
-import blue.endless.jankson.JsonObject;
 import com.mojang.serialization.Codec;
 
 public abstract class ConfigManager<T> {
@@ -69,7 +68,7 @@ public abstract class ConfigManager<T> {
         }
     }
 
-    public static <T> ConfigManager<T> jankson(Path configPath, Codec<T> codec, T defaultValue) {
+    public static <T> ConfigManager<T> createJankson(Path configPath, Codec<T> codec, T defaultValue) {
         return new JanksonConfigManager<>(configPath, codec, defaultValue);
     }
 }

@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import blue.endless.jankson.Jankson;
-import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.impl.SyntaxError;
 import com.mojang.serialization.Codec;
 
@@ -22,11 +21,6 @@ class JanksonConfigManager<T> extends ConfigManager<T> {
     protected JanksonConfigManager(Path configPath, Codec<T> codec, T defaultValue) {
         this(configPath, codec);
         this.defaultValue = Objects.requireNonNull(defaultValue);
-    }
-
-    protected JanksonConfigManager(Path configPath, Codec<T> codec, JsonObject defaultValue) {
-        this(configPath, codec);
-        this.defaultValue = codec.decode(JanksonOps.INSTANCE, Objects.requireNonNull(defaultValue)).getOrThrow(false, PRINT_TO_STDERR).getFirst();
     }
 
     @Override
@@ -64,9 +58,5 @@ class JanksonConfigManager<T> extends ConfigManager<T> {
             bytes = JanksonOps.INSTANCE.withEncoder(this.codec).apply(this.defaultValue).getOrThrow(false, PRINT_TO_STDERR).toJson(true, true).getBytes(StandardCharsets.UTF_8);
         }
         Files.write(this.configPath, bytes);
-    }
-
-    public void serialize(T config) throws IOException {
-        Files.writeString(this.configPath, this.getCodec().encodeStart(JanksonOps.INSTANCE, config).getOrThrow(false, PRINT_TO_STDERR).toJson());
     }
 }
