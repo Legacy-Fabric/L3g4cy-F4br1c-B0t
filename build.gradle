@@ -7,28 +7,27 @@
  */
 
 plugins {
-    // Apply the java plugin to add support for Java
     id 'java'
-
-    // Apply the application plugin to add support for building a CLI application.
     id 'application'
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
+    maven {
+	url "https://libraries.minecraft.net"
+    }
 }
 
 dependencies {
-    // This dependency is used by the application.
+    implementation 'blue.endless:jankson:1.1.0'
+    implementation 'com.mojang:datafixerupper:4.0.26'
+    implementation 'com.mojang:brigadier:1.0.17'
+    implementation 'com.discord4j:discord4j-core:3.1.1'
     implementation 'com.google.guava:guava:29.0-jre'
-
-    // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
 }
 
 application {
-    // Define the main class for the application.
-    mainClassName = 'io.github.boogiemonster1o1.legacyfabricbot.App'
+    mainClassName = 'io.github.boogiemonster1o1.legacyfabricbot.Main'
 }
