@@ -52,11 +52,10 @@ class JanksonConfigManager<T> extends ConfigManager<T> {
 
     @Override
     protected void writeDefaultData() throws IOException {
-        String text = "{}";
         if (this.defaultValue != null) {
-            text = JanksonOps.INSTANCE.withEncoder(this.codec).apply(this.defaultValue).getOrThrow(false, PRINT_TO_STDERR).toJson(true, true);
+            String text = JanksonOps.INSTANCE.withEncoder(this.codec).apply(this.defaultValue).getOrThrow(false, PRINT_TO_STDERR).toJson(true, true);
+            Files.writeString(this.configPath, text);
         }
-        Files.writeString(this.configPath, text);
         System.exit(0);
     }
 }

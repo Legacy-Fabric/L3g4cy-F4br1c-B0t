@@ -21,6 +21,7 @@ public class CommandManager {
     public CommandManager() {
         this.dispatcher = new CommandDispatcher<>();
         this.register(ApodCommand::register);
+        this.register(StopCommand::register);
         LegacyFabricBot.getInstance().getClient()
                 .on(MessageCreateEvent.class)
                 .filter(event -> event.getMember().isPresent() && !event.getMember().get().isBot())
