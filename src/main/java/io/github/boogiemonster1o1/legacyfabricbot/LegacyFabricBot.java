@@ -7,7 +7,7 @@ import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
 import io.github.boogiemonster1o1.legacyfabricbot.config.ConfigManager;
-import io.github.boogiemonster1o1.legacyfabricbot.object.Config;
+import io.github.boogiemonster1o1.legacyfabricbot.object.config.Config;
 
 public class LegacyFabricBot {
     private static LegacyFabricBot instance;

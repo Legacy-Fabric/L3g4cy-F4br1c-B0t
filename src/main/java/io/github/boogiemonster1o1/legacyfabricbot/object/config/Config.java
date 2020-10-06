@@ -1,4 +1,4 @@
-package io.github.boogiemonster1o1.legacyfabricbot.object;
+package io.github.boogiemonster1o1.legacyfabricbot.object.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

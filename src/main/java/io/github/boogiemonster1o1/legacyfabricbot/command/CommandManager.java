@@ -1,6 +1,7 @@
 package io.github.boogiemonster1o1.legacyfabricbot.command;
 
 import java.time.Instant;
+import java.util.function.Consumer;
 
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -19,6 +20,7 @@ public class CommandManager {
 
     public CommandManager() {
         this.dispatcher = new CommandDispatcher<>();
+        this.register(ApodCommand::register);
         LegacyFabricBot.getInstance().getClient()
                 .on(MessageCreateEvent.class)
                 .filter(event -> event.getMember().isPresent() && !event.getMember().get().isBot())
@@ -73,7 +75,12 @@ public class CommandManager {
     }
 
     @FunctionalInterface
-    interface Factory {
+    interface Factory extends Consumer<CommandDispatcher<MessageCreateEvent>> {
+        @Override
+        default void accept(CommandDispatcher<MessageCreateEvent> dispatcher) {
+            this.register(dispatcher);
+        }
+
         void register(CommandDispatcher<MessageCreateEvent> dispatcher);
     }
 }

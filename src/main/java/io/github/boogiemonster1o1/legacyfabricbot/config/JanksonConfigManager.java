@@ -1,7 +1,6 @@
 package io.github.boogiemonster1o1.legacyfabricbot.config;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -53,10 +52,11 @@ class JanksonConfigManager<T> extends ConfigManager<T> {
 
     @Override
     protected void writeDefaultData() throws IOException {
-        byte[] bytes = "{}".getBytes(StandardCharsets.UTF_8);
+        String text = "{}";
         if (this.defaultValue != null) {
-            bytes = JanksonOps.INSTANCE.withEncoder(this.codec).apply(this.defaultValue).getOrThrow(false, PRINT_TO_STDERR).toJson(true, true).getBytes(StandardCharsets.UTF_8);
+            text = JanksonOps.INSTANCE.withEncoder(this.codec).apply(this.defaultValue).getOrThrow(false, PRINT_TO_STDERR).toJson(true, true);
         }
-        Files.write(this.configPath, bytes);
+        Files.writeString(this.configPath, text);
+        System.exit(0);
     }
 }
