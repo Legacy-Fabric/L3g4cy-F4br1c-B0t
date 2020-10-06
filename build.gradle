@@ -19,6 +19,9 @@ repositories {
     }
 }
 
+sourceCompatibility = 11
+targetCompatibility = 11
+
 dependencies {
     implementation 'blue.endless:jankson:1.1.0'
     implementation 'com.mojang:datafixerupper:4.0.26'

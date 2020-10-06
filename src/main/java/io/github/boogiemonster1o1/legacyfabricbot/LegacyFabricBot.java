@@ -1,6 +1,7 @@
 package io.github.boogiemonster1o1.legacyfabricbot;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
@@ -19,7 +20,7 @@ public class LegacyFabricBot {
         String token = this.getConfig()
                 .getTokens()
                 .getBotToken();
-        this.client = DiscordClientBuilder.create(token).build().login().block();
+        this.client = Objects.requireNonNull(DiscordClientBuilder.create(token).build().login().block());
     }
 
     public static void main(String[] args) {
