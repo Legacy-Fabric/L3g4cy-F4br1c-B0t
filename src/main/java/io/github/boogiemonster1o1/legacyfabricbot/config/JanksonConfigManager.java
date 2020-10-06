@@ -11,7 +11,7 @@ import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.impl.SyntaxError;
 import com.mojang.serialization.Codec;
 
-public class JanksonConfigManager<T> extends ConfigManager<T> {
+class JanksonConfigManager<T> extends ConfigManager<T> {
     private static final Jankson JANKSON = Jankson.builder().build();
     private T defaultValue = null;
 
