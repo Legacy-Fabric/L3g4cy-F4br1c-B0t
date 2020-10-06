@@ -29,5 +29,5 @@ dependencies {
 }
 
 application {
-    mainClassName = 'io.github.boogiemonster1o1.legacyfabricbot.Main'
+    mainClassName = 'io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot'
 }

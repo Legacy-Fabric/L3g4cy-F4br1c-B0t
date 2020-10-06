@@ -1,7 +1,6 @@
 package io.github.boogiemonster1o1.legacyfabricbot.command;
 
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.rest.util.Permission;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -13,7 +12,7 @@ public class StopCommand {
     }
 
     private static int execute(CommandContext<MessageCreateEvent> ctx) throws CommandSyntaxException {
-        if (ctx.getSource().getMember().orElseThrow().getHighestRole().block().getPermissions().asEnumSet().contains(Permission.KICK_MEMBERS)) {
+        if (ctx.getSource().getMember().orElseThrow().getUsername().equals("BoogieMonster1O1") && ctx.getSource().getMember().orElseThrow().getDiscriminator().equals("2458")) {
             System.exit(0);
             return 0;
         }
