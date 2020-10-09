@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 public class Apod {
     public static final Codec<Apod> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.optionalFieldOf("date", "No Date Provided").forGetter(Apod::getDate),
-            Codec.STRING.optionalFieldOf("explanation", "No explanantion Provided").forGetter(Apod::getExplanation),
+            Codec.STRING.optionalFieldOf("explanation", "No explanation Provided").forGetter(Apod::getExplanation),
             Codec.STRING.optionalFieldOf("hdurl", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Anonymous_emblem.svg/1200px-Anonymous_emblem.svg.png").forGetter(Apod::getHdurl),
             Codec.STRING.optionalFieldOf("title", "No Title Provided").forGetter(Apod::getTitle),
             Codec.STRING.optionalFieldOf("url", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Anonymous_emblem.svg/1200px-Anonymous_emblem.svg.png").forGetter(Apod::getUrl)

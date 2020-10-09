@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
@@ -32,7 +34,7 @@ public class ApodCommand {
 
     private static int execute(CommandContext<MessageCreateEvent> ctx) throws CommandSyntaxException {
         MessageCreateEvent event = ctx.getSource();
-        String url = "https://api.nasa.gov/planetary/apod?api_key=" + LegacyFabricBot.getInstance().getConfig().getTokens().getApodToken();
+        String url = "https://api.nasa.gov/planetary/apod?api_key=" + LegacyFabricBot.getInstance().getConfig().getTokens().getApodToken() + "&date=" + getEasternDate();
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             try(InputStream in = conn.getInputStream()) {
@@ -58,5 +60,18 @@ public class ApodCommand {
             throw e;
         }
         return 0;
+    }
+
+    private static String getEasternDate() {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
+        String month = "" + cal.get(Calendar.MONTH);
+        if (month.length() == 1) {
+            month = "0" + month;
+        }
+        String day = "" + cal.get(Calendar.DAY_OF_MONTH);
+        if (day.length() == 1) {
+            day = "0" + day;
+        }
+        return "" + cal.get(Calendar.YEAR) + "-" + month + "-" + day;
     }
 }
