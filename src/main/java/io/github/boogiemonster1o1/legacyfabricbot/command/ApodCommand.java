@@ -34,7 +34,7 @@ public class ApodCommand {
 
     private static int execute(CommandContext<MessageCreateEvent> ctx) throws CommandSyntaxException {
         MessageCreateEvent event = ctx.getSource();
-        String url = "https://api.nasa.gov/planetary/apod?api_key=" + LegacyFabricBot.getInstance().getConfig().getTokens().getApodToken() + "&date=" + getEasternDate();
+        String url = "https://api.nasa.gov/planetary/apod?api_key=" + LegacyFabricBot.getInstance().getConfig().getTokens().getApodToken();
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             try(InputStream in = conn.getInputStream()) {
@@ -42,9 +42,13 @@ public class ApodCommand {
                 Apod apod = Apod.CODEC.decode(JanksonOps.INSTANCE, jsonObject).getOrThrow(false, System.err::println).getFirst();
                 event.getMessage().getChannel().flatMap(channel -> channel.createEmbed(spec -> {
                     CommandManager.appendFooter(spec, event);
+                    String explanation = apod.getExplanation();
+                    if (explanation.length() > 1024) {
+                        explanation = explanation.substring(0, 1021).concat("...");
+                    }
                     spec.setColor(Color.VIVID_VIOLET)
                             .setTitle("NASA Astronomy Picture of the Day")
-                            .addField(apod.getTitle(), apod.getExplanation(), false)
+                            .addField(apod.getTitle(), explanation, false)
                             .addField("Link to HD image", apod.getHdurl(), false)
                             .setImage(apod.getUrl());
                 })).subscribe();
@@ -60,18 +64,5 @@ public class ApodCommand {
             throw e;
         }
         return 0;
-    }
-
-    private static String getEasternDate() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
-        String month = "" + cal.get(Calendar.MONTH);
-        if (month.length() == 1) {
-            month = "0" + month;
-        }
-        String day = "" + cal.get(Calendar.DAY_OF_MONTH);
-        if (day.length() == 1) {
-            day = "0" + day;
-        }
-        return "" + cal.get(Calendar.YEAR) + "-" + month + "-" + day;
     }
 }
