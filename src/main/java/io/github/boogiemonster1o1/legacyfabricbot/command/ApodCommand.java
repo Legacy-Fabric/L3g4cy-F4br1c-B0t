@@ -38,19 +38,19 @@ public class ApodCommand {
             try(InputStream in = conn.getInputStream()) {
                 JsonObject jsonObject = JANKSON.load(in);
                 Apod apod = Apod.CODEC.decode(JanksonOps.INSTANCE, jsonObject).getOrThrow(false, System.err::println).getFirst();
-                event.getMessage().getChannel().block().createEmbed(spec -> {
+                event.getMessage().getChannel().flatMap(channel -> channel.createEmbed(spec -> {
                     CommandManager.appendFooter(spec, event);
                     spec.setColor(Color.VIVID_VIOLET)
                             .setTitle("NASA Astronomy Picture of the Day")
                             .addField(apod.getTitle(), apod.getExplanation(), false)
                             .addField("Link to HD image", apod.getHdurl(), false)
                             .setImage(apod.getUrl());
-                }).block();
+                })).subscribe();
             } catch (SyntaxError e) {
-                throw new RuntimeException("THIS CAN'T HAPPEN!", e);
+                throw new AssertionError("THIS CAN'T HAPPEN!", e);
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("THIS CAN'T HAPPEN!", e);
+            throw new AssertionError("THIS CAN'T HAPPEN!", e);
         } catch (IOException exception) {
             exception.printStackTrace();
             CommandSyntaxException e = new SimpleCommandExceptionType(exception::getMessage).create();

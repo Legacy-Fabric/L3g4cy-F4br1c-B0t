@@ -22,7 +22,7 @@ public class CommandManager {
         this.dispatcher = new CommandDispatcher<>();
         this.register(ApodCommand::register);
         this.register(StopCommand::register);
-        this.register(VersionCommand::register);
+        this.register(YarnVersionCommand::register);
         LegacyFabricBot.getInstance().getClient()
                 .on(MessageCreateEvent.class)
                 .filter(event -> event.getMember().isPresent() && !event.getMember().get().isBot())
