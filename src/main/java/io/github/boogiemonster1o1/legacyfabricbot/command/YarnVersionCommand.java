@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -15,27 +16,32 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.argument;
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;
 
 public class YarnVersionCommand {
     public static void register(CommandDispatcher<MessageCreateEvent> dispatcher) {
         dispatcher.register(
                 literal("yv")
-                        .executes(YarnVersionCommand::execute)
+                        .executes(ctx -> execute(ctx, "1.8.9"))
+                        .then(
+                                argument("version", StringArgumentType.string())
+                                        .executes(ctx -> execute(ctx, ctx.getArgument("version", String.class)))
+                        )
         );
     }
 
-    private static int execute(CommandContext<MessageCreateEvent> ctx) throws CommandSyntaxException {
+    private static int execute(CommandContext<MessageCreateEvent> ctx, String ver) throws CommandSyntaxException {
         String version;
         try {
             URL url = new URL("http://dl.bintray.com/legacy-fabric/Legacy-Fabric-Maven/net/fabricmc/yarn/maven-metadata.xml");
             Document doc = new SAXReader().read(url);
             Element root = doc.getRootElement();
-            String latestVersion = "";
+            String latestVersion = "NULL";
             Iterator<Element> iterator = root.element("versioning").element("versions").elementIterator();
             while (iterator.hasNext()) {
                 Element next = iterator.next();
-                if (!next.getData().toString().startsWith("1.8.9")) {
+                if (!next.getData().toString().startsWith(ver)) {
                     continue;
                 }
                 latestVersion = next.getData().toString();

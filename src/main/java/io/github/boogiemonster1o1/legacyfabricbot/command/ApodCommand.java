@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
