@@ -14,8 +14,6 @@ import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;
 
 public class RenameCommand {
-    private static final Integer MAX = 21600;
-
     public static void register(CommandDispatcher<MessageCreateEvent> dispatcher) {
         dispatcher.register(
                 literal("rename")
