@@ -23,6 +23,7 @@ public class CommandManager {
         this.register(ApodCommand::register);
         this.register(StopCommand::register);
         this.register(YarnVersionCommand::register);
+        this.register(SlowmodeCommand::register);
         LegacyFabricBot.getInstance().getClient()
                 .on(MessageCreateEvent.class)
                 .filter(event -> event.getMember().isPresent() && !event.getMember().get().isBot())
@@ -62,18 +63,18 @@ public class CommandManager {
 
     public static void appendFooter(EmbedCreateSpec spec, MessageCreateEvent event) {
         if (event.getMember().isPresent()) {
-            spec.setFooter("Requested by " + event.getMember().get().getUsername() + "#" + event.getMember().get().getDiscriminator(), event.getMember().get().getAvatarUrl());
+            spec.setFooter("Requested by " + event.getMember().get().getMention(), event.getMember().get().getAvatarUrl());
         }
         spec.setTimestamp(Instant.now());
     }
 
     public static void error(MessageCreateEvent event, CommandSyntaxException e) {
-        event.getMessage().getChannel().block().createEmbed(spec -> {
+        event.getMessage().getChannel().flatMap(channel -> channel.createEmbed(spec -> {
             spec.setTitle("Error parsing command: ")
                     .setColor(Color.RED)
                     .setDescription(e.getMessage());
             appendFooter(spec, event);
-        }).block();
+        })).subscribe();
     }
 
     @FunctionalInterface
