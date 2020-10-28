@@ -24,6 +24,8 @@ public class CommandManager {
         this.register(StopCommand::register);
         this.register(YarnVersionCommand::register);
         this.register(SlowmodeCommand::register);
+        this.register(TopicCommand::register);
+        this.register(RenameCommand::register);
         LegacyFabricBot.getInstance().getClient()
                 .on(MessageCreateEvent.class)
                 .filter(event -> event.getMember().isPresent() && !event.getMember().get().isBot())
