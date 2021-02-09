@@ -1,9 +1,14 @@
 package io.github.boogiemonster1o1.legacyfabricbot.command;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.channel.TextChannel;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
@@ -21,24 +26,26 @@ public class CommandManager {
     public CommandManager() {
         this.dispatcher = new CommandDispatcher<>();
         this.register(ApodCommand::register);
+        this.register(StatusCommand::register);
         this.register(StopCommand::register);
         this.register(YarnVersionCommand::register);
         this.register(SlowmodeCommand::register);
         this.register(RenameCommand::register);
         this.register(MuteCommand::register);
         this.register(UnmuteCommand::register);
+        Collection<String> commands = this.dispatcher.getRoot()
+                .getChildren()
+                .stream()
+                .map(CommandNode::getName)
+                .collect(ImmutableList.toImmutableList());
         LegacyFabricBot.getInstance().getClient()
                 .on(MessageCreateEvent.class)
                 .filter(event -> event.getMember().isPresent() && !event.getMember().get().isBot())
-                .filter(event -> event.getMessage().getContent().charAt(0) == '$' && this.dispatcher.getRoot()
-                        .getChildren()
-                        .stream()
-                        .map(CommandNode::getName)
-                        .collect(ImmutableList.toImmutableList())
-                        .contains(event.getMessage()
-                                .getContent()
-                                .substring(1)
-                                .split(" ")[0]))
+                .filter(event -> event.getMessage().getContent().startsWith("$")
+                        && commands.contains(event.getMessage()
+                        .getContent()
+                        .substring(1)
+                        .split(" ")[0]))
                 .subscribe(event -> {
                     try {
                         this.dispatcher.execute(event.getMessage().getContent().substring(1), event);
@@ -66,7 +73,7 @@ public class CommandManager {
 
     public static void appendFooter(EmbedCreateSpec spec, MessageCreateEvent event) {
         if (event.getMember().isPresent()) {
-            spec.setFooter("Requested by " + event.getMember().get().getMention(), event.getMember().get().getAvatarUrl());
+            spec.setFooter("Requested by " + event.getMember().get().getDisplayName() + "#" + event.getMember().get().getDiscriminator(), event.getMember().get().getAvatarUrl());
         }
         spec.setTimestamp(Instant.now());
     }
@@ -78,6 +85,32 @@ public class CommandManager {
                     .setDescription(e.getMessage());
             appendFooter(spec, event);
         })).subscribe();
+    }
+
+    public static SimpleCommandExceptionType NO_PERM = new SimpleCommandExceptionType(() -> "You do not have permission to run this command!");
+
+    public static void checkPerm(MessageCreateEvent event) throws CommandSyntaxException {
+        if (
+                event.getMember().isPresent()
+                && !event.getMember().get().isBot()
+                && event.getMessage().getChannel().block() instanceof TextChannel
+                && event.getMember()
+                .get()
+                .getRoleIds()
+                .stream()
+                .map(Snowflake::asLong)
+                .collect(Collectors.toSet())
+                .contains(
+                        LegacyFabricBot.getInstance()
+                                .getConfig()
+                                .getRoleSnowflakes()
+                                .getOpRole()
+                )
+        ) {
+            return;
+        }
+
+        throw NO_PERM.create();
     }
 
     @FunctionalInterface

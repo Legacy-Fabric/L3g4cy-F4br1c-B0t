@@ -9,15 +9,15 @@ import java.net.URL;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.impl.SyntaxError;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.rest.util.Color;
 import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
 import io.github.boogiemonster1o1.legacyfabricbot.config.JanksonOps;
 import io.github.boogiemonster1o1.legacyfabricbot.object.command.Apod;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;
 
