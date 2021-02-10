@@ -39,7 +39,6 @@ public class ApodCommand extends DescriptiveCommand {
 			try {
 				HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 				try (InputStream in = conn.getInputStream()) {
-					LegacyFabricBot.OBJECT_MAPPER.reader().readTree(new JsonParser)
 					Apod apod = LegacyFabricBot.OBJECT_MAPPER.readValue(in, Apod.class);
 					event.getMessage().getChannel().flatMap(channel -> channel.createEmbed(spec -> {
 						CommandManager.appendFooter(spec, event);
@@ -53,8 +52,6 @@ public class ApodCommand extends DescriptiveCommand {
 								.addField("Link to HD image", apod.getHdurl(), false)
 								.setImage(apod.getUrl());
 					})).subscribe();
-				} catch (SyntaxError e) {
-					throw new AssertionError("THIS CAN'T HAPPEN!", e);
 				}
 			} catch (MalformedURLException e) {
 				throw new AssertionError("THIS CAN'T HAPPEN!", e);
