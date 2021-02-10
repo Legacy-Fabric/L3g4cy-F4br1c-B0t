@@ -45,7 +45,7 @@ public class YarnVersionCommand {
     public static final HelpSupplier HELP_SUPPLIER = new HelpSupplier() {
         @Override
         public String getUsage(CommandContext<MessageCreateEvent> ctx) {
-            return String.join("\n", LegacyFabricBot.getInstance().getCommandManager().getDispatcher().getAllUsage(NODE, ctx.getSource(), false));
+            return NODE.getLiteral() + " " + String.join("\n", LegacyFabricBot.getInstance().getCommandManager().getDispatcher().getAllUsage(NODE, ctx.getSource(), false));
         }
 
         @Override

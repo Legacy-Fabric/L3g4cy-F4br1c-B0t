@@ -21,6 +21,8 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.ApodCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.gen.HttpCatCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.gen.HttpDogCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.YarnVersionCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.mod.MuteCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.mod.RenameCommand;
@@ -42,6 +44,8 @@ public class CommandManager {
         this.register(RenameCommand::register);
         this.register(MuteCommand::register);
         this.register(UnmuteCommand::register);
+        this.register(HttpCatCommand::register);
+        this.register(HttpDogCommand::register);
         this.dispatcher.register(
                 literal("help")
                         .executes(ctx -> HelpSupplier.printAll(ctx, ctx.getSource().getMessage().getChannel()))

@@ -26,6 +26,7 @@ public interface HelpSupplier {
 			SUPPLIERS.forEach((str, supp) -> {
 				spec.addField(str, "`" + supp.getUsage(ctx) + "`", true);
 			});
+			CommandManager.appendFooter(spec, ctx.getSource());
 		})).subscribe();
 		return Command.SINGLE_SUCCESS;
 	}
@@ -37,8 +38,9 @@ public interface HelpSupplier {
 		channelMono.flatMap(channel -> channel.createEmbed(spec -> {
 			spec.setColor(Color.CINNABAR);
 			spec.setTitle(command);
-			spec.addField("Usage", supp.getUsage(ctx), false);
-			spec.addField("Description", "`" + supp.getDescription() + "`", false);
+			spec.addField("Usage", "`" + supp.getUsage(ctx) + "`", false);
+			spec.addField("Description",  supp.getDescription(), false);
+			CommandManager.appendFooter(spec, ctx.getSource());
 		})).subscribe();
 		SUPPLIERS.get(command);
 		return Command.SINGLE_SUCCESS;
