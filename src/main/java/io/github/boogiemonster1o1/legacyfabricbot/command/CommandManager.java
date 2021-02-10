@@ -23,6 +23,7 @@ import io.github.boogiemonster1o1.legacyfabricbot.command.gen.ApodCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.HttpCatCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.HttpDogCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.JohnRobertsCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.gen.MemberCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.YarnVersionCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.mod.MuteCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.mod.RenameCommand;
@@ -50,6 +51,7 @@ public class CommandManager {
 		JohnRobertsCommand.register(this);
 		YarnVersionCommand.register(this);
 		MuteCommand.register(this);
+		MemberCommand.register(this);
 
 		RenameCommand.register(this);
 		SlowmodeCommand.register(this);
