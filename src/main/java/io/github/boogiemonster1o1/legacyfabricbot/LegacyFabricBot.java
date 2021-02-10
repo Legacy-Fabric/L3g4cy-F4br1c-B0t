@@ -3,19 +3,26 @@ package io.github.boogiemonster1o1.legacyfabricbot;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.event.domain.message.ReactionAddEvent;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.channel.TextChannel;
+import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.rest.util.Color;
 import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
 import io.github.boogiemonster1o1.legacyfabricbot.config.ConfigManager;
 import io.github.boogiemonster1o1.legacyfabricbot.object.config.Config;
 
 public class LegacyFabricBot {
-	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
 	public static final TypeFactory TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
 	private static LegacyFabricBot instance;
 	private final ConfigManager<Config> configManager;
@@ -54,6 +61,56 @@ public class LegacyFabricBot {
 									+ "Running on http://127.0.0.1:5000/"
 					)).subscribe();
 		});
+		ReactionEmoji check = ReactionEmoji.unicode("✅");
+		ReactionEmoji x = ReactionEmoji.unicode("❌");
+		this.client.on(MessageCreateEvent.class)
+				.map(MessageCreateEvent::getMessage)
+				.subscribe(message -> {
+					String content = message.getContent();
+					if (!content.startsWith("$suggest ")) {
+						return;
+					}
+					String suggestion = content.substring(9);
+					message.getGuild()
+							.flatMap(g -> g.getChannelById(Snowflake.of(693196904284291102L)))
+							.filter(channel -> channel instanceof TextChannel)
+							.map(TextChannel.class::cast)
+							.flatMap(channel -> channel.createEmbed(spec -> {
+								spec.setTitle("Suggestion");
+								spec.setDescription(suggestion);
+								spec.setColor(Color.BLUE);
+							}))
+							.subscribe(embed -> {
+								embed.addReaction(check).subscribe();
+								embed.addReaction(x).subscribe();
+							});
+					message.delete().subscribe();
+				});
+		this.client.on(ReactionAddEvent.class)
+				.filterWhen(event -> event.getChannel().map(channel -> channel.getId().asLong() == 693196904284291102L))
+				.filterWhen(event -> event.getMessage()
+						.filter(message -> message.getAuthor().isPresent())
+						.map(message -> message.getAuthor().orElseThrow())
+						.map(user -> user.getId().asLong() == this.client.getSelfId().asLong())
+				)
+				.filter(event -> event.getMember().isPresent())
+				.filter(event -> !event.getMember().orElseThrow().isBot())
+				.subscribe(event -> {
+					Member member = event.getMember().orElseThrow();
+					if (event.getEmoji().equals(x)){
+						event.getMessage()
+								.flatMapMany(message -> message.getReactors(check).filter(user -> user.getId().asLong() == member.getId().asLong()))
+								.subscribe(user -> {
+									event.getMessage().flatMap(m -> m.removeReaction(check, user.getId())).subscribe();
+								});
+					} else if (event.getEmoji().equals(check)){
+						event.getMessage()
+								.flatMapMany(message -> message.getReactors(x).filter(user -> user.getId().asLong() == member.getId().asLong()))
+								.subscribe(user -> {
+									event.getMessage().flatMap(m -> m.removeReaction(x, user.getId())).subscribe();
+								});
+					}
+				});
 		this.commandManager = new CommandManager();
 		this.client.onDisconnect().block();
 	}
