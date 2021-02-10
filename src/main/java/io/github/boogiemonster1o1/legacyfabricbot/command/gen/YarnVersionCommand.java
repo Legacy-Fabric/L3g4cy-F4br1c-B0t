@@ -1,4 +1,4 @@
-package io.github.boogiemonster1o1.legacyfabricbot.command;
+package io.github.boogiemonster1o1.legacyfabricbot.command.gen;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.base.MoreObjects;
 import com.google.gson.JsonArray;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -24,6 +25,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
+import discord4j.core.object.entity.Member;
+import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
+import io.github.boogiemonster1o1.legacyfabricbot.command.HelpSupplier;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -33,18 +37,31 @@ import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;
 
 public class YarnVersionCommand {
+    private static LiteralCommandNode<MessageCreateEvent> NODE;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final TypeFactory TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
     private static final CollectionType VERSION_LIST_TYPE = TYPE_FACTORY.constructCollectionType(List.class, Version.class);
+    public static final HelpSupplier HELP_SUPPLIER = new HelpSupplier() {
+        @Override
+        public String getUsage() {
+            return NODE.getUsageText();
+        }
+
+        @Override
+        public String getDescription() {
+            return "Gets the latest yarn version for the specified minecraft version.";
+        }
+    };
 
     public static void register(CommandDispatcher<MessageCreateEvent> dispatcher) {
-        dispatcher.register(
+        NODE = dispatcher.register(
                 literal("yv")
                         .then(
                                 argument("version", StringArgumentType.string())
                                         .executes(ctx -> execute(ctx.getSource(), ctx.getArgument("version", String.class)))
                         )
         );
+        HelpSupplier.SUPPLIERS.put(NODE.getLiteral(), HELP_SUPPLIER);
     }
 
     private static int execute(MessageCreateEvent event, String ver) throws CommandSyntaxException {

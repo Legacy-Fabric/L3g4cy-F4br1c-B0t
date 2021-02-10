@@ -1,4 +1,4 @@
-package io.github.boogiemonster1o1.legacyfabricbot.command;
+package io.github.boogiemonster1o1.legacyfabricbot.command.mod;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.discordjson.json.gateway.StatusUpdate;
 import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
+import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
 
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.argument;
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;

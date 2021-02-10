@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
@@ -19,6 +20,14 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.boogiemonster1o1.legacyfabricbot.command.gen.ApodCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.gen.YarnVersionCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.mod.MuteCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.mod.RenameCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.mod.SlowmodeCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.mod.StatusCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.mod.StopCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.mod.UnmuteCommand;
 
 public class CommandManager {
     private final CommandDispatcher<MessageCreateEvent> dispatcher;
@@ -33,6 +42,14 @@ public class CommandManager {
         this.register(RenameCommand::register);
         this.register(MuteCommand::register);
         this.register(UnmuteCommand::register);
+        this.dispatcher.register(
+                literal("help")
+                        .executes(ctx -> HelpSupplier.printAll(ctx.getSource().getMessage().getChannel()))
+                        .then(
+                                argument("command", StringArgumentType.string())
+                                .executes(ctx -> HelpSupplier.printOne(ctx.getSource().getMessage().getChannel(), StringArgumentType.getString(ctx, "command")))
+                        )
+        );
         Collection<String> commands = this.dispatcher.getRoot()
                 .getChildren()
                 .stream()

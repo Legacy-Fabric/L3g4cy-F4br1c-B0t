@@ -1,9 +1,10 @@
-package io.github.boogiemonster1o1.legacyfabricbot.command;
+package io.github.boogiemonster1o1.legacyfabricbot.command.mod;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
 
 public class StopCommand {
     public static void register(CommandDispatcher<MessageCreateEvent> dispatcher) {
