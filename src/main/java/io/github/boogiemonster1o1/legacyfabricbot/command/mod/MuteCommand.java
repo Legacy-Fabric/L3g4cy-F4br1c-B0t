@@ -1,5 +1,6 @@
 package io.github.boogiemonster1o1.legacyfabricbot.command.mod;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -9,6 +10,7 @@ import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
 import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
+import io.github.boogiemonster1o1.legacyfabricbot.command.argument.SnowflakeArgumentType;
 
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.argument;
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;
@@ -18,7 +20,7 @@ public class MuteCommand {
         dispatcher.register(
                 literal("mute")
                         .then(
-                                argument("value", StringArgumentType.string())
+                                argument("value", new SnowflakeArgumentType())
                                         .executes(MuteCommand::execute)
                         )
         );
@@ -26,17 +28,15 @@ public class MuteCommand {
 
     private static int execute(CommandContext<MessageCreateEvent> ctx) throws CommandSyntaxException {
         CommandManager.checkPerm(ctx.getSource());
-        String value = StringArgumentType.getString(ctx, "value");
-        if (value.startsWith("<@") && value.endsWith(">")) {
-            value = value.substring(2, value.length() - 1);
-        }
-        Snowflake flake = Snowflake.of(value);
-        if (ctx.getSource().getMessage().getGuild().flatMap(guild -> guild.getMemberById(flake)).blockOptional().isPresent()) {
-            ctx.getSource().getMessage().getGuild().flatMap(guild -> guild.getMemberById(flake).flatMap(member -> member.addRole(Snowflake.of(LegacyFabricBot.getInstance().getConfig().getRoleSnowflakes().getMuteRole())))).subscribe();
-            ctx.getSource().getMessage().getChannel().flatMap(channel -> channel.createMessage("Muted " + flake.toString())).subscribe();
-            return 0;
-        }
-        String finalValue = value;
-        throw new SimpleCommandExceptionType(() -> "Could not find member with id " + finalValue).create();
+        Snowflake flake = SnowflakeArgumentType.get(ctx, "value");
+        ctx.getSource()
+                .getMessage()
+                .getGuild()
+                .flatMap(guild -> guild.getMemberById(flake))
+                .flatMap(member -> {
+                    return member.addRole(Snowflake.of(LegacyFabricBot.getInstance().getConfig().getRoleSnowflakes().getMuteRole()));
+                })
+                .subscribe();
+        return Command.SINGLE_SUCCESS;
     }
 }
