@@ -1,26 +1,26 @@
 package io.github.boogiemonster1o1.legacyfabricbot.command.mod;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
 import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
+import io.github.boogiemonster1o1.legacyfabricbot.command.ModCommand;
 
-public class StopCommand {
-    public static void register(CommandDispatcher<MessageCreateEvent> dispatcher) {
-        dispatcher.register(
-                CommandManager.literal("stop")
-                        .executes(StopCommand::execute)
-        );
-    }
+public class StopCommand extends ModCommand {
+	public StopCommand(LiteralCommandNode<MessageCreateEvent> node) {
+		super(node);
+	}
 
-    private static int execute(CommandContext<MessageCreateEvent> ctx) throws CommandSyntaxException {
-        CommandManager.checkPerm(ctx.getSource());
-        ctx.getSource().getMessage().getChannel().flatMap(channel -> channel.createMessage("Stopping!")).subscribe();
-        LegacyFabricBot.getInstance().getClient().logout();
-        System.exit(0);
-        return Command.SINGLE_SUCCESS;
-    }
+	public static void register(CommandManager commandManager) {
+		LiteralCommandNode<MessageCreateEvent> node = CommandManager.literal("stop")
+				.executes(ctx -> {
+					CommandManager.checkPerm(ctx.getSource());
+					ctx.getSource().getMessage().getChannel().flatMap(channel -> channel.createMessage("Stopping!")).subscribe();
+					LegacyFabricBot.getInstance().getClient().logout();
+					System.exit(0);
+					return Command.SINGLE_SUCCESS;
+				}).build();
+		commandManager.register(new StopCommand(node));
+	}
 }

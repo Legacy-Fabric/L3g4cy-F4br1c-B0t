@@ -20,7 +20,7 @@ public class SnowflakeArgumentType implements ArgumentType<Snowflake> {
 		try {
 			id = Long.parseLong(snowflakeStr);
 		} catch (NumberFormatException e) {
-			throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerInvalidLong().createWithContext(reader,snowflakeStr);
+			throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerInvalidLong().createWithContext(reader, snowflakeStr);
 		}
 		return Snowflake.of(id);
 	}
