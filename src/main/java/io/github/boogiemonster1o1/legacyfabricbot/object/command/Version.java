@@ -1,11 +1,15 @@
 package io.github.boogiemonster1o1.legacyfabricbot.object.command;
 
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.common.base.MoreObjects;
+import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.YarnVersionCommand;
 
 public class Version implements Comparable<Version> {
+	public static final CollectionType VERSION_LIST_TYPE = LegacyFabricBot.TYPE_FACTORY.constructCollectionType(List.class, Version.class);
 	public String gameVersion;
 	public String separator;
 	public long build;

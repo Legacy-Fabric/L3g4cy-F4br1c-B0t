@@ -5,14 +5,12 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
 import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
 import io.github.boogiemonster1o1.legacyfabricbot.command.DescriptiveCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.object.command.Version;
@@ -21,9 +19,6 @@ import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.
 import static io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager.literal;
 
 public class YarnVersionCommand extends DescriptiveCommand {
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-	private static final TypeFactory TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
-	private static final CollectionType VERSION_LIST_TYPE = TYPE_FACTORY.constructCollectionType(List.class, Version.class);
 
 	public YarnVersionCommand(LiteralCommandNode<MessageCreateEvent> node) {
 		super(node);
@@ -38,7 +33,7 @@ public class YarnVersionCommand extends DescriptiveCommand {
 									String ver = ctx.getArgument("version", String.class);
 									try {
 										URL url = new URL("https://meta.legacyfabric.net/v2/versions/yarn/" + ver);
-										List<Version> versions = OBJECT_MAPPER.readValue(url, VERSION_LIST_TYPE);
+										List<Version> versions = LegacyFabricBot.OBJECT_MAPPER.readValue(url, Version.VERSION_LIST_TYPE);
 										if (versions.isEmpty()) {
 											throw new SimpleCommandExceptionType(() -> "Could not get the latest yarn version for Minecraft " + ver + "!").create();
 										}

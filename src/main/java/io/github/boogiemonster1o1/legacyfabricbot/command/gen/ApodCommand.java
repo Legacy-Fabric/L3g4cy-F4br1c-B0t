@@ -9,6 +9,7 @@ import java.net.URL;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.impl.SyntaxError;
+import com.fasterxml.jackson.core.JsonParser;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -38,8 +39,8 @@ public class ApodCommand extends DescriptiveCommand {
 			try {
 				HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 				try (InputStream in = conn.getInputStream()) {
-					JsonObject jsonObject = JANKSON.load(in);
-					Apod apod = Apod.CODEC.decode(JanksonOps.INSTANCE, jsonObject).getOrThrow(false, System.err::println).getFirst();
+					LegacyFabricBot.OBJECT_MAPPER.reader().readTree(new JsonParser)
+					Apod apod = LegacyFabricBot.OBJECT_MAPPER.readValue(in, Apod.class);
 					event.getMessage().getChannel().flatMap(channel -> channel.createEmbed(spec -> {
 						CommandManager.appendFooter(spec, event);
 						String explanation = apod.getExplanation();

@@ -3,6 +3,8 @@ package io.github.boogiemonster1o1.legacyfabricbot;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
@@ -13,6 +15,8 @@ import io.github.boogiemonster1o1.legacyfabricbot.config.ConfigManager;
 import io.github.boogiemonster1o1.legacyfabricbot.object.config.Config;
 
 public class LegacyFabricBot {
+	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	public static final TypeFactory TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
 	private static LegacyFabricBot instance;
 	private final ConfigManager<Config> configManager;
 	private final GatewayDiscordClient client;
