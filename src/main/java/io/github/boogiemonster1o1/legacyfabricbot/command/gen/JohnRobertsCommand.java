@@ -36,6 +36,7 @@ public class JohnRobertsCommand {
 									.flatMap(channel -> channel.createEmbed(spec -> {
 										spec.setImage("https://upload.wikimedia.org/wikipedia/commons/4/43/Official_roberts_CJ.jpg");
 									})).subscribe();
+							ctx.getSource().getMessage().delete().subscribe();
 							return Command.SINGLE_SUCCESS;
 						})
 		);
