@@ -26,6 +26,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
 import discord4j.core.object.entity.Member;
+import io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot;
 import io.github.boogiemonster1o1.legacyfabricbot.command.CommandManager;
 import io.github.boogiemonster1o1.legacyfabricbot.command.HelpSupplier;
 import org.dom4j.Document;
@@ -43,8 +44,8 @@ public class YarnVersionCommand {
     private static final CollectionType VERSION_LIST_TYPE = TYPE_FACTORY.constructCollectionType(List.class, Version.class);
     public static final HelpSupplier HELP_SUPPLIER = new HelpSupplier() {
         @Override
-        public String getUsage() {
-            return NODE.getUsageText();
+        public String getUsage(CommandContext<MessageCreateEvent> ctx) {
+            return String.join("\n", LegacyFabricBot.getInstance().getCommandManager().getDispatcher().getAllUsage(NODE, ctx.getSource(), false));
         }
 
         @Override

@@ -44,10 +44,10 @@ public class CommandManager {
         this.register(UnmuteCommand::register);
         this.dispatcher.register(
                 literal("help")
-                        .executes(ctx -> HelpSupplier.printAll(ctx.getSource().getMessage().getChannel()))
+                        .executes(ctx -> HelpSupplier.printAll(ctx, ctx.getSource().getMessage().getChannel()))
                         .then(
                                 argument("command", StringArgumentType.string())
-                                .executes(ctx -> HelpSupplier.printOne(ctx.getSource().getMessage().getChannel(), StringArgumentType.getString(ctx, "command")))
+                                .executes(ctx -> HelpSupplier.printOne(ctx, ctx.getSource().getMessage().getChannel(), StringArgumentType.getString(ctx, "command")))
                         )
         );
         Collection<String> commands = this.dispatcher.getRoot()

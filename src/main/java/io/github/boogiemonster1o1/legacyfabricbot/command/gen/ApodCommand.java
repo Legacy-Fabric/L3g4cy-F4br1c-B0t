@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
@@ -30,8 +32,8 @@ public class ApodCommand {
     private static LiteralCommandNode<MessageCreateEvent> NODE;
     public static final HelpSupplier HELP_SUPPLIER = new HelpSupplier() {
         @Override
-        public String getUsage() {
-            return NODE.getUsageText();
+        public String getUsage(CommandContext<MessageCreateEvent> ctx) {
+            return String.join("\n", LegacyFabricBot.getInstance().getCommandManager().getDispatcher().getAllUsage(NODE, ctx.getSource(), false));
         }
 
         @Override
