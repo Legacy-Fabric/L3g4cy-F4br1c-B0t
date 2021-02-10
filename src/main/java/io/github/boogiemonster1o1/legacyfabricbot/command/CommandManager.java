@@ -23,6 +23,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.ApodCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.HttpCatCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.HttpDogCommand;
+import io.github.boogiemonster1o1.legacyfabricbot.command.gen.JohnRobertsCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.gen.YarnVersionCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.mod.MuteCommand;
 import io.github.boogiemonster1o1.legacyfabricbot.command.mod.RenameCommand;
@@ -46,6 +47,7 @@ public class CommandManager {
         this.register(UnmuteCommand::register);
         this.register(HttpCatCommand::register);
         this.register(HttpDogCommand::register);
+        this.register(JohnRobertsCommand::register);
         this.dispatcher.register(
                 literal("help")
                         .executes(ctx -> HelpSupplier.printAll(ctx, ctx.getSource().getMessage().getChannel()))
