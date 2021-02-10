@@ -22,7 +22,7 @@ import io.github.boogiemonster1o1.legacyfabricbot.config.ConfigManager;
 import io.github.boogiemonster1o1.legacyfabricbot.object.config.Config;
 
 public class LegacyFabricBot {
-	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	public static final TypeFactory TYPE_FACTORY = OBJECT_MAPPER.getTypeFactory();
 	private static LegacyFabricBot instance;
 	private final ConfigManager<Config> configManager;
