@@ -1,6 +1,7 @@
 package io.github.boogiemonster1o1.legacyfabricbot;
 
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.DeserializationConfig;
@@ -79,6 +80,8 @@ public class LegacyFabricBot {
 								spec.setTitle("Suggestion");
 								spec.setDescription(suggestion);
 								spec.setColor(Color.BLUE);
+								spec.setTimestamp(message.getTimestamp());
+								spec.setFooter("Suggested by " + message.getAuthor().get().getUsername() + "#" + message.getAuthor().get().getDiscriminator(), message.getAuthor().get().getAvatarUrl());
 							}))
 							.subscribe(embed -> {
 								embed.addReaction(check).subscribe();
