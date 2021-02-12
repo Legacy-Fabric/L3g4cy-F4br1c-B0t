@@ -41,10 +41,17 @@ jar {
     }
 }
 
+jar {
+    classifier = 'nodeps'
+} 
+
 shadowJar {
     configurations = [project.configurations.compile]
+    classifier = '' 
 }
 
 application {
     mainClassName = 'io.github.boogiemonster1o1.legacyfabricbot.LegacyFabricBot'
 }
+
+task stage(dependsOn: ['run'])
